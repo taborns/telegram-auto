@@ -21,14 +21,26 @@ class PackageSerializer(serializers.ModelSerializer):
         model = models.TaskPackage
         fields = '__all__'
 
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Payment
+        fields = '__all__'
+
+class InvoiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Invoice
+        fields = '__all__'
+
 class TaskSerializer(serializers.ModelSerializer):
     address = serializers.CharField(read_only=True)
     action = ActionSerializer(read_only=True)
     member_count = serializers.IntegerField(read_only=True)
+    payments = PaymentSerializer(many=True, read_only=True)
+    invoice = InvoiceSerializer(read_only=True)
     class Meta:
         model = models.Task
         exclude = ('random_token',)
         extra_kwargs = {
             'package': {'write_only': True},
         }
-        read_only_fields = ('status','target_member_count')
+        read_only_fields = ('status', 'invoice','target_member_count')

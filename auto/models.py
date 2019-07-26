@@ -25,7 +25,7 @@ class TaskPackage(models.Model):
         return "%s : %d" % (self.action.label, self.number)
 
 class Task(models.Model):
-    entity_ident = models.CharField(max_length=200, verbose_name='username', unique=True)
+    entity_ident = models.CharField(max_length=200, verbose_name='username')
     action = models.ForeignKey('Action', on_delete=models.CASCADE, related_name='tasks')
     package = models.ForeignKey('TaskPackage',on_delete=models.CASCADE, related_name='tasks')
     status = models.CharField(max_length=20, choices=(
@@ -39,6 +39,7 @@ class Task(models.Model):
     address = models.CharField(max_length=200)
     member_count = models.IntegerField()
     target_member_count = models.IntegerField()
+    invoice = models.OneToOneField('Invoice', on_delete=models.CASCADE,  related_name='task')
 
     class Meta:
         verbose_name = 'Task'
@@ -50,3 +51,12 @@ class RunningTask(models.Model):
     task = models.ForeignKey('Task', on_delete=models.CASCADE, related_name='running_tasks')
     class Meta:
         ordering = ('-created_at',)
+
+class Invoice(models.Model):
+    expected_price = models.FloatField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+class Payment(models.Model):
+    task = models.ForeignKey('Task', on_delete=models.CASCADE, related_name='payments')
+    amount = models.FloatField()
+    transaction_time = models.DateTimeField(auto_now_add=True)

@@ -20,10 +20,10 @@ from auto import views as auto_views
 urlpatterns = [
     re_path('^admin/', admin.site.urls),
     re_path('^tasks/$', auto_views.TaskListCreate.as_view()),
+    re_path('^tasks/(?P<invoiceID>\d+)/$', auto_views.InvoiceTaskList.as_view()),
     re_path('^callback/$', auto_views.CallBackView.as_view(), name='callback-url'),
     re_path('^packages/(?:(?P<action>\d+)/)?$', auto_views.PackageList.as_view()),
     re_path('^tele/automate/$', auto_views.TelegramChannelInfoUpdateView.as_view()),
     re_path('^runningtasks/$', auto_views.RunningTaskView.as_view()),
-    
     
 ]
